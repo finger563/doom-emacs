@@ -55,3 +55,15 @@
 ;;
 ;; And then we're good to go!
 (doom-initialize-modules)
+
+;; remove existing keymap and make sure keymap works on macos
+(setq global-map (make-keymap))
+(setq mac-command-modifier 'meta) ;; map the command key to the meta key
+(global-set-key (kbd "M-v") 'scroll-down-command) ;; command-v (mac) should page up
+(global-set-key (kbd "A-v") 'scroll-down-command) ;; A is the right Alt (mac keyboards)
+(global-set-key (kbd "C-x C-z") 'toggle-frame-fullscreen) ;; something like vscode
+
+;; neotree (tree file browser)
+(global-set-key (kbd "C-c C-SPC") 'neotree-toggle) ;; something like vscode
+
+;; (setq auto-mode-alist nil)
