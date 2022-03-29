@@ -66,6 +66,17 @@
 ;; neotree (tree file browser)
 (global-set-key (kbd "C-c C-SPC") 'neotree-toggle) ;; something like vscode
 
+;; doxygen / documentation generation
+;; (require 'docstr)
+(setq smartparens-global-mode 0) ;; need to disable smartparens to enable docstr
+;; Enable `docstr' inside these major modes.
+(add-hook 'c++-mode-hook (lambda () (docstr-mode 1)))
+(add-hook 'c-mode-hook (lambda () (docstr-mode 1)))
+(add-hook 'swift-mode-hook (lambda () (docstr-mode 1)))
+(add-hook 'typescript-mode-hook (lambda () (docstr-mode 1)))
+(setq global-docstr-mode 1)
+(setq docstr-key-support t)
+
 ;; Custom functions/hooks for persisting/loading frame geometry upon save/load
 (defun save-frameg ()
 "Gets the current frame's geometry and saves to ~/.emacs.frameg."
