@@ -55,3 +55,62 @@
 ;;
 ;; And then we're good to go!
 (doom-initialize-modules)
+
+;; remove existing keymap and make sure keymap works on macos
+(setq global-map (make-keymap))
+(setq mac-command-modifier 'meta) ;; map the command key to the meta key
+(global-set-key (kbd "M-v") 'scroll-down-command) ;; command-v (mac) should page up
+(global-set-key (kbd "A-v") 'scroll-down-command) ;; A is the right Alt (mac keyboards)
+(global-set-key (kbd "C-x C-z") 'toggle-frame-fullscreen) ;; something like vscode
+
+;; neotree (tree file browser)
+(global-set-key (kbd "C-c C-SPC") 'neotree-toggle) ;; something like vscode
+
+;; doxygen / documentation generation
+;; (require 'docstr)
+(setq smartparens-global-mode 0) ;; need to disable smartparens to enable docstr
+;; Enable `docstr' inside these major modes.
+(add-hook 'c++-mode-hook (lambda () (docstr-mode 1)))
+(add-hook 'c-mode-hook (lambda () (docstr-mode 1)))
+(add-hook 'swift-mode-hook (lambda () (docstr-mode 1)))
+(add-hook 'typescript-mode-hook (lambda () (docstr-mode 1)))
+(setq global-docstr-mode 1)
+(setq docstr-key-support t)
+
+;; Custom functions/hooks for persisting/loading frame geometry upon save/load
+(defun save-frameg ()
+"Gets the current frame's geometry and saves to ~/.emacs.frameg."
+(let ((frameg-font (frame-parameter (selected-frame) 'font))
+(frameg-left (frame-parameter (selected-frame) 'left))
+(frameg-top (frame-parameter (selected-frame) 'top))
+(frameg-width (frame-parameter (selected-frame) 'width))
+(frameg-height (frame-parameter (selected-frame) 'height))
+(frameg-file (expand-file-name "~/.emacs.frameg")))
+(with-temp-buffer
+;; Turn off backup for this file
+(make-local-variable 'make-backup-files)
+(setq make-backup-files nil)
+(insert
+";;; This file stores the previous emacs frame's geometry.\n"
+";;; Last generated " (current-time-string) ".\n"
+"(setq initial-frame-alist\n"
+;; " '((font . \"" frameg-font "\")\n"
+" '("
+(format " (top . %d)\n" (max frameg-top 0))
+(format " (left . %d)\n" (max frameg-left 0))
+(format " (width . %d)\n" (max frameg-width 0))
+(format " (height . %d)))\n" (max frameg-height 0)))
+(when (file-writable-p frameg-file)
+(write-file frameg-file)))))
+
+(defun load-frameg ()
+"Loads ~/.emacs.frameg which should load the previous frame's geometry."
+(let ((frameg-file (expand-file-name "~/.emacs.frameg")))
+(when (file-readable-p frameg-file)
+(load-file frameg-file))))
+
+;; Special work to do ONLY when there is a window system being used
+(if window-system
+(progn
+(add-hook 'after-init-hook 'load-frameg)
+(add-hook 'kill-emacs-hook 'save-frameg)))

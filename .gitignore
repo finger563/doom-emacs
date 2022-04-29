@@ -36,3 +36,4 @@ var/
 *.fas
 *.dat
 *.eld
+org-persist/
