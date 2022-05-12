@@ -77,6 +77,8 @@
 (setq global-docstr-mode 1)
 (setq docstr-key-support t)
 
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 ;; Custom functions/hooks for persisting/loading frame geometry upon save/load
 (defun save-frameg ()
 "Gets the current frame's geometry and saves to ~/.emacs.frameg."
