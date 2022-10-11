@@ -116,3 +116,18 @@
 (progn
 (add-hook 'after-init-hook 'load-frameg)
 (add-hook 'kill-emacs-hook 'save-frameg)))
+
+(setq org-agenda-files '("~/roam_notes"))
+
+(defun ndk/refresh-org-agenda-files ()
+   (interactive)
+   (setq org-agenda-files '("~/roam_notes")))
+
+;; I'm assuming that `C-c z` - one of the keys that is reserved for
+;; end-user use - is undefined. You can bind the function above to it
+;; in the global map, so that it is always available - unless a mode redefines it...
+(global-set-key (kbd "C-c z") #'ndk/refresh-org-agenda-files)
+
+;; ... or you add the binding to the org-mode-map,
+;; so that it is only available in Org mode buffers.
+;; (define-key org-mode-map (kbd "C-c z") #'ndk/refresh-org-agenda-files)
