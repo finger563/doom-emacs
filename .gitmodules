@@ -1,0 +1,3 @@
+[submodule "copilot-emacsd"]
+	path = copilot-emacsd
+	url = https://github.com/rksm/copilot-emacsd
